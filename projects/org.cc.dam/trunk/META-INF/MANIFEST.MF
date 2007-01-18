@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Creative Commons Digital Asset Management
+Bundle-SymbolicName: org.cc; singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.cc.Plugin
+Bundle-Vendor: Creative Commons & CS 360 Team
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime
+Eclipse-AutoStart: true
+Bundle-ClassPath: lib/derby.jar,
+ lib/derbytools.jar,
+ lib/itext-1.4.2.jar
