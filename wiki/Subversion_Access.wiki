@@ -1,4 +1,5 @@
-﻿= Subversion Access =
+﻿#summary Accessing code via Subversion.
+#label Subversion
 
 To checkout and run code from our Subversion repository, it is most convenient if you have [http://www.eclipse.org/ Eclipse] configured with the [http://subclipse.tigris.org/ Tigris Subclipse] plugin.  Please follow the instructions on the Subclipse page to install the plugin and then add a repository for [http://code.google.com/p/cc-dam/svn].
 
