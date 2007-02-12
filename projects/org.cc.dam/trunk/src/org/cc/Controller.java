@@ -1,5 +1,7 @@
 package org.cc;
 
+import org.cc.xmp.XMLExtractor;
+import org.cc.xmp.XMLParser;
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;

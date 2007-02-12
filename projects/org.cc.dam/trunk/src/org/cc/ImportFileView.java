@@ -16,7 +16,6 @@ import org.eclipse.jface.viewers.TableViewer;
 
 
 
-
 public class ImportFileView extends ViewPart implements SelectionListener {
     private Controller controller;
     private Text url; // url text bar
