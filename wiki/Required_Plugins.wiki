@@ -1,0 +1,6 @@
+#summary Required Eclipse Plugins
+#labels requirements,eclipse,plugin
+
+Currently, the Digial Asset Management system relies on [http://db.apache.org/derby/ Derby], an all-Java database from the [http://www.apache.org/ Apache Foundation].  This functionality is available directly as a plugin for Eclipse.
+
+The recommended way for installing the Eclipse Derby plugin is through the Eclipse Software Updates mechanism.  Select to install new features, and use the Callisto Discovery Site as a source.  After the available features are collected, select "Apache Derby Core" from the "Enabling Features" sublist.
