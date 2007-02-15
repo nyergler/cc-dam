@@ -7,8 +7,9 @@ Bundle-Activator: org.cc.Plugin
 Bundle-Vendor: Creative Commons & CS 360 Team
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime
-Eclipse-AutoStart: true
-Bundle-ClassPath: lib/derby.jar,
- lib/derbytools.jar,
- lib/itext-1.4.2.jar
+ org.eclipse.core.runtime,
+ org.cc.xmp,
+ org.apache.derby.core
+Eclipse-LazyStart: true
+Bundle-ClassPath: lib/itext-1.4.2.jar
+Export-Package: org.cc
