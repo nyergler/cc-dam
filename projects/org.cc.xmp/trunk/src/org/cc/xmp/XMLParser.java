@@ -1,13 +1,11 @@
 package org.cc.xmp;
 
-import java.io.File;
 import java.io.ByteArrayInputStream;
 import java.util.HashMap;
 import java.util.Stack;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -25,7 +23,6 @@ public class XMLParser {
         return this.metadata;
     }
     private void parse() throws Exception {
-        String xml = this.extractor.getXML();
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = null;
         saxParser = factory.newSAXParser();

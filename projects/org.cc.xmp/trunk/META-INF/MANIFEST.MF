@@ -7,7 +7,8 @@ Bundle-Activator: org.cc.xmp.Activator
 Bundle-Vendor: CC / IPFW
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
- org.eclipse.core.runtime,
- com.lowagie.itext
+ org.eclipse.core.runtime
 Eclipse-LazyStart: true
 Export-Package: org.cc.xmp
+Bundle-ClassPath: lib/itext-1.4.2.jar,
+ .
