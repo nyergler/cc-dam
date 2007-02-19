@@ -1,5 +1,6 @@
 package org.cc;
 
+import org.cc.xmp.PDFExtractor;
 import org.cc.xmp.XMLExtractor;
 import org.cc.xmp.XMLParser;
 import java.io.File;
