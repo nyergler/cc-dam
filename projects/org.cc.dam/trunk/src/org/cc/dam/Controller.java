@@ -1,4 +1,4 @@
-package org.cc;
+package org.cc.dam;
 
 import org.cc.xmp.PDFExtractor;
 import org.cc.xmp.XMLExtractor;

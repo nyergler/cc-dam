@@ -1,4 +1,4 @@
-package org.cc;
+package org.cc.dam;
 
 import java.util.Observer;
 import java.util.Observable;
@@ -29,7 +29,7 @@ public class DatabaseView extends ViewPart implements Observer{
 private Table table;
 
 
-		public static final String ID ="org.cc.DatabaseView";
+		public static final String ID ="org.cc.dam.DatabaseView";
 	public DatabaseView() {
         Controller.getDatabase().addObserver(this);
 	}

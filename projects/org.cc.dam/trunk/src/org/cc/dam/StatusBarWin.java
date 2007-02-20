@@ -1,4 +1,4 @@
-package org.cc;
+package org.cc.dam;
 
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.SWT;

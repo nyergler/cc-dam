@@ -1,4 +1,4 @@
-package org.cc;
+package org.cc.dam;
 
 import org.eclipse.ui.plugin.*;
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -49,6 +49,6 @@ public class Plugin extends AbstractUIPlugin {
 	 * @return the image descriptor
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {
-		return AbstractUIPlugin.imageDescriptorFromPlugin("org.cc", path);
+		return AbstractUIPlugin.imageDescriptorFromPlugin("org.cc.dam", path);
 	}
 }

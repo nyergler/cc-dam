@@ -1,4 +1,4 @@
-package org.cc;
+package org.cc.dam;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionListener;
@@ -28,7 +28,7 @@ public class QueryView extends ViewPart {
     private Group queryGroup;
     private GridData gridData;
     
-    public static final String ID = "org.cc.QueryView";
+    public static final String ID = "org.cc.dam.QueryView";
     public QueryView() {
         // TODO Auto-generated constructor stub
     }

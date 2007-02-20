@@ -7,7 +7,7 @@
          point="org.eclipse.core.runtime.applications">
       <application>
          <run
-               class="org.cc.Application">
+               class="org.cc.dam.Application">
          </run>
       </application>
    </extension>
@@ -15,30 +15,30 @@
          point="org.eclipse.ui.perspectives">
       <perspective
             name="CC-DAM Perspective"
-            class="org.cc.Perspective"
-            id="org.cc.perspective">
+            class="org.cc.dam.Perspective"
+            id="org.cc.dam.perspective">
       </perspective>
    </extension>
    <extension
          id="product"
          point="org.eclipse.core.runtime.products">
       <product
-            application="org.cc.application"
+            application="org.cc.dam.application"
             name="Digital Asset Management"/>
    </extension>
    <extension
          point="org.eclipse.ui.views">
       <view
-            class="org.cc.ImportFileView"
-            id="org.cc.ImportFileView"
+            class="org.cc.dam.ImportFileView"
+            id="org.cc.dam.ImportFileView"
             name="Import File"/>
       <view
-            class="org.cc.DatabaseView"
-            id="org.cc.DatabaseView"
+            class="org.cc.dam.DatabaseView"
+            id="org.cc.dam.DatabaseView"
             name="Browse Database"/>
       <view
-            class="org.cc.QueryView"
-            id="org.cc.QueryView"
+            class="org.cc.dam.QueryView"
+            id="org.cc.dam.QueryView"
             name="Query Database"/>
    </extension>
 

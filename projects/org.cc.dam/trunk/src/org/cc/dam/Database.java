@@ -11,7 +11,7 @@
  * method when you're done working with a database.
  */
 
-package org.cc;
+package org.cc.dam;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

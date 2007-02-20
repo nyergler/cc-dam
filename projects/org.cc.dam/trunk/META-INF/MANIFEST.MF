@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Creative Commons Digital Asset Management
+Bundle-SymbolicName: org.cc.dam;singleton:=true
+Bundle-Version: 0.0.0
+Bundle-Activator: org.cc.dam.Plugin
+Bundle-Vendor: Creative Commons & CS 360 / CS 460 Teams
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.cc.xmp,
+ org.apache.derby.core
+Eclipse-LazyStart: true
+Bundle-ClassPath: lib/itext-1.4.2.jar
+Export-Package: org.cc.dam

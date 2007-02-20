@@ -4,7 +4,7 @@
 //                                                                  //
 //////////////////////////////////////////////////////////////////////
 
-package org.cc;
+package org.cc.dam;
 
 public class UpdateMessage {
     public static final int LISTING = 0;

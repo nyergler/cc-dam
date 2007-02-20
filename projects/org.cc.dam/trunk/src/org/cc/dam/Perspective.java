@@ -1,11 +1,11 @@
-package org.cc;
+package org.cc.dam;
 
 import org.eclipse.ui.IPageLayout;
 import org.eclipse.ui.IPerspectiveFactory;
 import org.eclipse.ui.IFolderLayout;
 
 public class Perspective implements IPerspectiveFactory {
-	private String leftFolderID= "org.cc.leftfolder";
+	private String leftFolderID= "org.cc.dam.leftfolder";
 	
 	public void createInitialLayout(IPageLayout layout) {
 	

@@ -1,6 +1,6 @@
 // Digital Asset Management
 
-package org.cc;
+package org.cc.dam;
 
 import org.eclipse.core.runtime.IPlatformRunnable;
 import org.eclipse.swt.widgets.Display;

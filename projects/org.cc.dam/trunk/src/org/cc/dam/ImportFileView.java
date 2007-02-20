@@ -1,4 +1,4 @@
-package org.cc;
+package org.cc.dam;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
@@ -26,7 +26,7 @@ public class ImportFileView extends ViewPart implements SelectionListener {
     private String path; // path of file
     private ProgressBar bar;
     private Group remoteFileGroup;
-    public static final String ID = "org.cc.ImportFileView"; // view ID
+    public static final String ID = "org.cc.dam.ImportFileView"; // view ID
     
     private static final String[] FILTER_NAMES = {
         "Portable Document Format (*.pdf)",
