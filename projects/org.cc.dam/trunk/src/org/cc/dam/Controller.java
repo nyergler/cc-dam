@@ -1,13 +1,11 @@
 package org.cc.dam;
 
-import org.cc.xmp.PDFExtractor;
-import org.cc.xmp.XMLExtractor;
-import org.cc.xmp.XMLParser;
 import java.io.File;
 import java.io.IOException;
+import java.lang.Class;
+import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Vector;
 
 import org.cc.dam.filetype.Generic;
 import org.cc.dam.filetype.PDF;
@@ -40,10 +38,17 @@ public class Controller {
         String extension = getExtension(indexname);
         HashMap tags = null;
         Generic file = null;
-        if (extension.equalsIgnoreCase(".pdf"))
-        	file = new PDF(filename);
-        else  // we don't know how to parse it
-            return false;
+        String filetypeClassName = "org.cc.dam.filetype." + extension.toUpperCase();
+        try {
+        	Class aClass = Class.forName(filetypeClassName);
+        	Class[] typeParams = { String.class };
+        	Constructor aConstructor = aClass.getConstructor(typeParams);
+        	file = (Generic)(aConstructor.newInstance(filename));
+        }
+        catch (Exception e) {
+        	System.err.println("Got an exception during reflection stuff: " + e.toString());
+        	return false;
+        }
         if (file != null) {
             tags = file.getMetadata();
             Iterator iterator = tags.keySet().iterator();
@@ -113,7 +118,7 @@ public class Controller {
 
     private static String getExtension(String filename) {
         int lastindex = filename.lastIndexOf(".");
-        return (lastindex == -1) ? "" : filename.substring(lastindex);
+        return (lastindex == -1) ? "" : filename.substring(lastindex + 1);
     }
     
     /**
