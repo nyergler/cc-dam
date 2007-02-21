@@ -9,6 +9,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.cc.dam.filetype.Generic;
+import org.cc.dam.filetype.PDF;
+
 public class Controller {
     private static Database database = new Database();
     /*
@@ -35,16 +38,14 @@ public class Controller {
     
     public static boolean parseFile(String filename, String indexname) throws Exception {
         String extension = getExtension(indexname);
-        XMLParser parser = null;
         HashMap tags = null;
+        Generic file = null;
         if (extension.equalsIgnoreCase(".pdf"))
-            parser = new XMLParser(new PDFExtractor(filename));
-        else if (extension.equalsIgnoreCase(".xml"))
-            parser = new XMLParser(new XMLExtractor(filename));
+        	file = new PDF(filename);
         else  // we don't know how to parse it
             return false;
-        if (parser != null) {
-            tags = parser.getMetadata();
+        if (file != null) {
+            tags = file.getMetadata();
             Iterator iterator = tags.keySet().iterator();
             // loop through all the tag/data pairs, adding each to the database
             while (iterator.hasNext()) {
