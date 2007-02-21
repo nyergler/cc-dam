@@ -3,6 +3,7 @@ package org.cc.dam.filetype;
 import java.util.HashMap;
 
 import org.cc.xmp.PDFExtractor;
+import org.cc.xmp.XMLParser;
 
 public class PDF extends Generic {
 	public PDF(String filename) {
