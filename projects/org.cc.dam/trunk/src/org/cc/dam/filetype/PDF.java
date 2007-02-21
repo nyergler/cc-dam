@@ -15,6 +15,7 @@ public class PDF extends Generic {
 			return xmlp.getMetadata();
 		}
 		catch (Exception e) {
+			System.err.println("Got an exception!");
 			System.err.println(e.toString());
 			return new HashMap();
 		}

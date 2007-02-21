@@ -8,8 +8,8 @@ Bundle-Vendor: Creative Commons & CS 360 / CS 460 Teams
 Bundle-Localization: plugin
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
- org.cc.xmp,
- org.apache.derby.core
+ org.apache.derby.core,
+ org.cc.xmp
 Eclipse-LazyStart: true
-Bundle-ClassPath: lib/itext-1.4.2.jar
 Export-Package: org.cc.dam
+Bundle-ClassPath: src/
