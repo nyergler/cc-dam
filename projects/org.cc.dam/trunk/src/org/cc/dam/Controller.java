@@ -43,7 +43,8 @@ public class Controller {
         	Class aClass = Class.forName(filetypeClassName);
         	Class[] typeParams = { String.class };
         	Constructor aConstructor = aClass.getConstructor(typeParams);
-        	file = (Generic)(aConstructor.newInstance(filename));
+        	String[] filenameArray = { filename };  // required for Java 6
+        	file = (Generic)(aConstructor.newInstance(filenameArray));
         }
         catch (Exception e) {
         	System.err.println("Got an exception during reflection stuff: " + e.toString());
