@@ -11,13 +11,12 @@ import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
 import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.jface.viewers.StructuredViewer;
 import org.eclipse.jface.viewers.TableViewer;
 
-
+import org.cc.dam.filetype.FiletypeNotSupportedException;
+import org.cc.dam.filetype.InvalidFiletypeException;
 
 public class ImportFileView extends ViewPart implements SelectionListener {
-    private Controller controller;
     private Text url; // url text bar
     private Text browse; // browse text bar										
     private Button urlBtn; // button for url import							
@@ -28,17 +27,11 @@ public class ImportFileView extends ViewPart implements SelectionListener {
     private Group remoteFileGroup;
     public static final String ID = "org.cc.dam.ImportFileView"; // view ID
     
-    private static final String[] FILTER_NAMES = {
-        "Portable Document Format (*.pdf)",
-    "All Files (*.*)"};
-    
-    
-    private static final String[] FILTER_EXTS = { "*.pdf","*.*"};
+    private static final String[] FILTER_NAMES = { "All Files (*.*)" };
+    private static final String[] FILTER_EXTS = { "*.*"};
     
     public ImportFileView() {
         // TODO Auto-generated constructor stub
-        this.controller = new Controller();
-        
     }
     /***
      * createPartControl creates a layout for the view, and creates / places the
@@ -176,20 +169,18 @@ public class ImportFileView extends ViewPart implements SelectionListener {
         // a file needs to be imported
         if(e.getSource().equals(importFileBtn)){
             path = browse.getText();
-            if(path.equals("") || path == null){
-                
-                MessageDialog.openWarning(shell, "File Import Error!", "A file was not selected! Please select a valid file.");
-            }
-            else if(!validExtension(path)){
-                
-                MessageDialog.openWarning(shell, "File Import Error!", "The file must be a PDF!");
-            }
-            
-            else
-                try {
+            if(path != null && !path.equals("")){
+            	try {
                     Controller.parseFile(path);
                 }
-            catch (Exception ex) { System.err.println(e.toString()); }
+            	catch (FiletypeNotSupportedException ex) {
+            		MessageDialog.openError(shell, "Filetype Not Supported", ex.toString());
+            	}
+            	catch (InvalidFiletypeException ex) {
+            		MessageDialog.openError(shell, "Invalid Filetype Plugin", ex.toString());
+            	}
+            	catch (Exception ex) { System.err.println(ex.toString()); }
+            }
             // clear the browse box after file was imported.
             browse.setText("");
         }
@@ -220,12 +211,15 @@ public class ImportFileView extends ViewPart implements SelectionListener {
                 	status.open();
                 	// start the progress bar
                 	bar.setVisible(true);
-                    if (!Controller.parseURL(path,chooser2.getFilterPath()+"/"+filename))
-                        MessageDialog.openWarning(shell, "File Import Error!", "Sorry, I don't know how to parse this kind of file.");
+                	Controller.parseURL(path, chooser2.getFilterPath() + "/" + filename);
                 }
-                catch (Exception ex) { ex.printStackTrace(); }
-                
-                
+            	catch (FiletypeNotSupportedException ex) {
+            		MessageDialog.openError(shell, "Filetype Not Supported", ex.toString());
+            	}
+            	catch (InvalidFiletypeException ex) {
+            		MessageDialog.openError(shell, "Invalid Filetype Plugin", ex.toString());
+            	}
+            	catch (Exception ex) { ex.printStackTrace(); }
             }
             // we only want a temp copy of the file
             else{
@@ -233,10 +227,15 @@ public class ImportFileView extends ViewPart implements SelectionListener {
                 	// start the progress bar 
                 	status.open();
                     // the controller will take care of the temp, just pass in null
-                    if (!Controller.parseURL(path, null))
-                        MessageDialog.openWarning(shell, "File Import Error!", "Sorry, couldn't open the file.");
+                    Controller.parseURL(path, null);
                 }
-                catch (Exception ex) { ex.printStackTrace(); }
+            	catch (FiletypeNotSupportedException ex) {
+            		MessageDialog.openError(shell, "Filetype Not Supported", ex.toString());
+            	}
+            	catch (InvalidFiletypeException ex) {
+            		MessageDialog.openError(shell, "Invalid Filetype Plugin", ex.toString());
+            	}
+            	catch (Exception ex) { ex.printStackTrace(); }
             }
             
             

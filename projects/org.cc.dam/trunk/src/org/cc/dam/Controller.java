@@ -7,8 +7,9 @@ import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.cc.dam.filetype.FiletypeNotSupportedException;
+import org.cc.dam.filetype.InvalidFiletypeException;
 import org.cc.dam.filetype.Generic;
-import org.cc.dam.filetype.PDF;
 
 public class Controller {
     private static Database database = new Database();
@@ -34,7 +35,8 @@ public class Controller {
      * @throws Exception When something terrible and unexpected happens.
      */
     
-    public static boolean parseFile(String filename, String indexname) throws Exception {
+    public static boolean parseFile(String filename, String indexname) throws FiletypeNotSupportedException,
+                                                                              InvalidFiletypeException {
         String extension = getExtension(indexname);
         HashMap tags = null;
         Generic file = null;
@@ -44,10 +46,18 @@ public class Controller {
         	Class[] typeParams = { String.class };
         	Constructor aConstructor = aClass.getConstructor(typeParams);
         	String[] filenameArray = { filename };  // required for Java 6
-        	file = (Generic)(aConstructor.newInstance(filenameArray));
+        	file = (Generic)(aConstructor.newInstance((Object[])filenameArray));
+        }
+        catch (ClassNotFoundException e) {
+        	throw new FiletypeNotSupportedException("Filetype " + extension + " not supported.");
+        }
+        catch (NoSuchMethodException e) {
+        	throw new InvalidFiletypeException("Invalid filetype plugin for extension " + extension + ".");
+        }
+        catch (InstantiationException e) {
+        	throw new InvalidFiletypeException("Invalid filetype plugin for extension " + extension + ".");
         }
         catch (Exception e) {
-        	System.err.println("Got an exception during reflection stuff: " + e.toString());
         	return false;
         }
         if (file != null) {
