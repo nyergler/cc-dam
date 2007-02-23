@@ -17,5 +17,4 @@ public class MetaDataListCC extends MetaDataList
 		if(containsTag(tag)) return true;
 		else return false;
 	}
-
 }
