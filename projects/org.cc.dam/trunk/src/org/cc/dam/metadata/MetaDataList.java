@@ -3,7 +3,7 @@ package org.cc.dam.metadata;
 import java.util.Vector;
 //trying to change name
 public abstract class MetaDataList {
-	private Vector tags;
+	protected Vector tags;
 	
 	public String[] getTags()
 	{
@@ -11,4 +11,6 @@ public abstract class MetaDataList {
 	}
 	
 	public abstract boolean isValid(String tag, String value);
+	
+	public abstract boolean containsTag(String tag);
 }
