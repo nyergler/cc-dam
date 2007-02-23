@@ -210,7 +210,7 @@ public class ImportFileView extends ViewPart implements SelectionListener {
                     // download the file 
                 	status.open();
                 	// start the progress bar
-                	bar.setVisible(true);
+                	//bar.setVisible(true);
                 	Controller.parseURL(path, chooser2.getFilterPath() + "/" + filename);
                 }
             	catch (FiletypeNotSupportedException ex) {
