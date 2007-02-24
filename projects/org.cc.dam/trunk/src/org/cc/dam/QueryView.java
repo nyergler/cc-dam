@@ -25,8 +25,8 @@ public class QueryView extends ViewPart {
 	private Combo key;
 	private Text value;
 	private Button addBtn;
-	private Button searchBtn;
 	private Button clearBtn;
+	
 	
 
 	public QueryView() {
@@ -39,66 +39,73 @@ public class QueryView extends ViewPart {
 	 */
 	public void createPartControl(Composite parent) {
 		
+		// Controller for query actions
 		QueryController qc = new QueryController();
-		GridData gd = new GridData(SWT.NONE);
+		// gridata
+		GridData gd = new GridData();
 	    gd.horizontalAlignment = GridData.FILL;
 	    gd.grabExcessHorizontalSpace = true;
-	      
-		parent.setLayout(new GridLayout(1, true));
+	   
+		parent.setLayout(new GridLayout(1,false));
 
 		// Window information Label
 		Label queryLabel = new Label(parent, SWT.NONE);
 		queryLabel.setText("Use the options below to search the database.");
 		
+		// Query Builder
 		Group queryBuilder = new Group(parent, SWT.NONE);
 		queryBuilder.setText("Query Builder");
 		queryBuilder.setLayout(new GridLayout(1,true));
 		queryBuilder.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL | GridData.FILL_VERTICAL));
-		
+		// Make the table
 		queryTable = new Table(queryBuilder, SWT.NONE);
 		queryTable.setHeaderVisible(true);
 		queryTable.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL | GridData.FILL_VERTICAL));
-
+		
+		// Key
 		TableColumn keyCol = new TableColumn(queryTable, SWT.LEFT);
 		keyCol.setResizable(true);
 		keyCol.setText("Key");
-
+		// Value
 		TableColumn valueCol = new TableColumn(queryTable, SWT.LEFT);
 		valueCol.setResizable(true);
 		valueCol.setText("Value");
 
 		keyCol.pack();
 		valueCol.pack();
-
+		queryTable.pack();
+		
+		// Controls
 		Composite a = new Composite(queryBuilder, SWT.NONE);
-		a.setLayout(new GridLayout(3, true));
+		a.setLayout(new GridLayout(2, false));
 		a.setLayoutData(gd);
 		
+		// not used yet
+//		Composite logic = new Composite(a,SWT.None);
+//		logic.setLayout(new GridLayout(2,false));
+//		Button andBtn = new Button(logic, SWT.RADIO);
+//		andBtn.setText("AND");
+//		Button orBtn = new Button(logic, SWT.RADIO);
+//		orBtn.setText("OR");
+//		
+//		Label blank = new Label(a,SWT.None);
+//		blank.setText("");
+		
+		// Key combo box
 		key = new Combo(a, SWT.BORDER);
-		key.setLayoutData(gd);
-		
-		for(int i = 0; i < tags.length; i++){
-			key.add(tags[i]);
-		}
-		
-		
+		key.setItems(tags); 
+		// Value text box
 		value = new Text(a, SWT.BORDER);
 		value.setLayoutData(gd);
-
-		addBtn = new Button(a, SWT.None);
-		addBtn.setText("Add");
-		addBtn.addSelectionListener(qc);
 		
-		Composite panel = new Composite(parent,SWT.NONE);
-		panel.setLayout(new GridLayout(2,true));
-		//panel.setLayoutData(gd);
-		  
-		searchBtn = new Button(panel, SWT.NONE);
-		searchBtn.setText("Search");
-		searchBtn.addSelectionListener(qc);
+		addBtn = new Button(a, SWT.None);
+		addBtn.setText("Add Constraint");
+		addBtn.addSelectionListener(qc);
 	
-		clearBtn = new Button(panel, SWT.NONE);
-		clearBtn.setText("Clear");
+		clearBtn = new Button(a, SWT.None);
+		clearBtn.setText("Clear Constraints");
+		clearBtn.addSelectionListener(qc);
+	
 	}
 
 	public void setFocus() {
@@ -110,21 +117,25 @@ public class QueryView extends ViewPart {
 		public void widgetSelected(SelectionEvent e){
 			
 			if (e.getSource() == addBtn){
+				
+				HashMap query = new HashMap();
+				// Make TableItem from data
 				String[] data = {tags[key.getSelectionIndex()],value.getText()};
 				TableItem a = new TableItem(queryTable,SWT.NONE);
 				a.setText(data);
+				// Reset text
+				value.setText("");
 				
-			}
-			if (e.getSource() == searchBtn){
-				System.out.println("hghg");
-				HashMap query = new HashMap();
+				// pull all constraints out of table
 				TableItem[] items = queryTable.getItems();
+				// put constraits into HashMap
 				for(int i = 0; i < items.length; i++){
 					query.put(items[i].getText(0), items[i].getText(1));
 				}
+				// query the database.
 				Controller.doQuery(query);
-				
 			}
+			
 			if (e.getSource() == clearBtn){
 				queryTable.removeAll();
 				Controller.refreshDatabaseView();
