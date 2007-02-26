@@ -16,17 +16,14 @@ public class PDF extends Generic {
 		                                                new MetaDataListxapRights() };
 	public PDF(String filename) {
 		super(filename);
-		System.err.println("#");
 	}
 	public HashMap getMetadata() {
 		try {
 			String[] supportedTags;
 			int numberOfTags = 0;
-			System.err.println("!");
 			for (int i = 0; i < PDF.SUPPORTED_METADATA.length; i += 1) {
 				numberOfTags += PDF.SUPPORTED_METADATA[i].getTags().length;
 			}
-			System.err.println(numberOfTags);
 			supportedTags = new String[numberOfTags];
 			int index = 0;
 			for (int i = 0; i < PDF.SUPPORTED_METADATA.length; i += 1) {
@@ -40,7 +37,7 @@ public class PDF extends Generic {
 		}
 		catch (Exception e) {
 			System.err.println("Got an exception!");
-			System.err.println(e.toString());
+			e.printStackTrace();
 			return new HashMap();
 		}
 	}
