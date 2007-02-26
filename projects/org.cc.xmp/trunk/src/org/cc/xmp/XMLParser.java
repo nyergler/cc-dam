@@ -14,9 +14,11 @@ import org.xml.sax.helpers.DefaultHandler;
 public class XMLParser {
     HashMap metadata = null;
     Extractor extractor = null;
-    public XMLParser(Extractor extractor) {
+    String[] supportedTags;
+    public XMLParser(Extractor extractor, String[] supportedTags) {
         metadata = new HashMap();
         this.extractor = extractor;
+        this.supportedTags = supportedTags;
     }
     public HashMap getMetadata() throws Exception {
         this.parse();
@@ -26,7 +28,7 @@ public class XMLParser {
         SAXParserFactory factory = SAXParserFactory.newInstance();
         SAXParser saxParser = null;
         saxParser = factory.newSAXParser();
-        DefaultHandler handler = new MySAXApp(this.metadata);
+        DefaultHandler handler = new MySAXApp(this.metadata, this.supportedTags);
 
         // String -> byte[] -> ByteArrayInputStream -> InputStream
         // and then we wonder why Java is inefficient
@@ -42,11 +44,14 @@ class MySAXApp extends DefaultHandler {
     private StringBuffer buffer;
     private HashMap metadata;
     private Stack tagStack = null;
+    private String[] supportedTags;
 
-    public MySAXApp(HashMap where) {
+    public MySAXApp(HashMap where, String[] supportedTags) {
         super();
         this.metadata = where;
         this.tagStack = new Stack();
+        this.supportedTags = supportedTags;
+        System.err.println(supportedTags);
     }
     public void startDocument() {
         System.err.println("doc starts!");
@@ -66,6 +71,13 @@ class MySAXApp extends DefaultHandler {
         String namespace = element.substring(0, element.lastIndexOf(":"));
         String tag       = element.substring(element.lastIndexOf(":") + 1);
         if (i_care_about_this_tag == false) buffer = null;
+        for (int i = 0; i < this.supportedTags.length; i += 1) {
+        	if (element.equals(this.supportedTags[i])) {
+        		i_care_about_this_tag = true;
+        		i = this.supportedTags.length;
+        	}
+        }
+        /*
         i_care_about_this_tag = true;
         if (namespace.equals("xapRights")) {
             if (tag.equals("Copyright")) {
@@ -92,6 +104,7 @@ class MySAXApp extends DefaultHandler {
         else {
             i_care_about_this_tag = false;
         }
+        */
         if (i_care_about_this_tag || this.tagStack.size() > 0) {
             this.tagStack.push(element);
             System.out.println(this.tagStack);
