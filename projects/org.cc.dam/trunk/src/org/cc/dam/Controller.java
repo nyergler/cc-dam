@@ -10,6 +10,7 @@ import java.util.Iterator;
 import org.cc.dam.filetype.FiletypeNotSupportedException;
 import org.cc.dam.filetype.InvalidFiletypeException;
 import org.cc.dam.filetype.Generic;
+import org.cc.dam.filetype.PDF;
 
 public class Controller {
     private static Database database = new Database();
@@ -41,6 +42,9 @@ public class Controller {
         HashMap tags = null;
         Generic file = null;
         String filetypeClassName = "org.cc.dam.filetype." + extension.toUpperCase();
+        System.err.println(filetypeClassName);
+        file = new PDF(filename);
+        /*
         try {
         	Class aClass = Class.forName(filetypeClassName);
         	Class[] typeParams = { String.class };
@@ -60,6 +64,7 @@ public class Controller {
         catch (Exception e) {
         	return false;
         }
+        */
         if (file != null) {
             tags = file.getMetadata();
             Iterator iterator = tags.keySet().iterator();
