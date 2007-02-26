@@ -42,14 +42,14 @@ public class XMLParser {
 class MySAXApp extends DefaultHandler {
     private boolean i_care_about_this_tag = false;
     private StringBuffer buffer;
-    private HashMap metadata;
-    private Stack tagStack = null;
+    private HashMap<String, String> metadata;
+    private Stack<String> tagStack = null;
     private String[] supportedTags;
 
-    public MySAXApp(HashMap where, String[] supportedTags) {
+    public MySAXApp(HashMap<String, String> where, String[] supportedTags) {
         super();
         this.metadata = where;
-        this.tagStack = new Stack();
+        this.tagStack = new Stack<String>();
         this.supportedTags = supportedTags;
         System.err.println(supportedTags);
     }
@@ -68,8 +68,6 @@ class MySAXApp extends DefaultHandler {
         throws SAXException {
         String element = sName.equals("") ? qName : sName;
         System.err.println(">> " + element);
-        String namespace = element.substring(0, element.lastIndexOf(":"));
-        String tag       = element.substring(element.lastIndexOf(":") + 1);
         if (i_care_about_this_tag == false) buffer = null;
         for (int i = 0; i < this.supportedTags.length; i += 1) {
         	if (element.equals(this.supportedTags[i])) {
@@ -77,34 +75,6 @@ class MySAXApp extends DefaultHandler {
         		i = this.supportedTags.length;
         	}
         }
-        /*
-        i_care_about_this_tag = true;
-        if (namespace.equals("xapRights")) {
-            if (tag.equals("Copyright")) {
-                System.err.print("Found rights: ");
-            }
-            else if (tag.equals("Marked")) {
-                System.err.print("Found marked: ");
-            }
-            else if (tag.equals("WebStatement")) {
-                System.err.print("Found web statement: ");
-            }
-        }
-        else if (namespace.equals("cc")) {
-            if (tag.equals("cc:license")) {
-                System.err.print("Found CC License: ");
-            }
-        }
-        else if (namespace.equals("dc")) {
-            try {
-                DublinCore.typeByString(tag);
-            }
-            catch (Exception e) { i_care_about_this_tag = false; }
-        }
-        else {
-            i_care_about_this_tag = false;
-        }
-        */
         if (i_care_about_this_tag || this.tagStack.size() > 0) {
             this.tagStack.push(element);
             System.out.println(this.tagStack);
