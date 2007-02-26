@@ -11,7 +11,7 @@ public class MetaDataListxapRights extends MetaDataList
 
 	public boolean containsTag(String tag) {
 		for(int i = 0; i < tags.size(); i++)
-			if(((String) tags.get(i)).equals(tag)) return true;
+			if(tags.get(i).equals(tag)) return true;
 		return false;
 	}
 
