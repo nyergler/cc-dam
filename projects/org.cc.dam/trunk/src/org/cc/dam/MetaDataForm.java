@@ -5,15 +5,15 @@ import java.util.*;
 
 public class MetaDataForm
 {
-	private Hashtable table;
-	private Hashtable mdLookup;
-	private Vector tags;
+	private Hashtable<String, String> table;
+	private Hashtable<String, MetaDataList> mdLookup;
+	private Vector<String> tags;
 	
 	public MetaDataForm(MetaDataList dataLists[])
 	{
-		table    = new Hashtable();
-		mdLookup = new Hashtable();
-		tags     = new Vector();
+		table    = new Hashtable<String, String>();
+		mdLookup = new Hashtable<String, MetaDataList>();
+		tags     = new Vector<String>();
 		//Add all the keys to the hash table
 		//and store all tags in the hashtable
 		for(int list = 0; list < dataLists.length; list++)

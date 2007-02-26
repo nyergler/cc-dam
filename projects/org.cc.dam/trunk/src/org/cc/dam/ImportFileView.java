@@ -10,7 +10,6 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.jface.dialogs.MessageDialog;
 import org.eclipse.swt.dnd.*;
 import org.eclipse.jface.viewers.ViewerDropAdapter;
-import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.jface.viewers.TableViewer;
 
 import org.cc.dam.filetype.FiletypeNotSupportedException;
@@ -23,7 +22,6 @@ public class ImportFileView extends ViewPart implements SelectionListener {
     private Button browseBtn; // button for file browsing
     private Button importFileBtn; // button for local file import
     private String path; // path of file
-    private ProgressBar bar;
     private Group remoteFileGroup;
     public static final String ID = "org.cc.dam.ImportFileView"; // view ID
     
@@ -267,14 +265,5 @@ public class ImportFileView extends ViewPart implements SelectionListener {
     public void setFocus() {
         // TODO Auto-generated method stub
         
-    }
-    private String getExtension(String filename) {
-        return filename.substring(filename.lastIndexOf("."));
-        
-    }
-    private boolean validExtension(String path){
-        
-        // should i ignore the case?!
-        return getExtension(path).equalsIgnoreCase(".pdf");
     }
 }

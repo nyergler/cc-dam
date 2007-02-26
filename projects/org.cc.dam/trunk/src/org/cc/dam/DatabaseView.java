@@ -4,7 +4,6 @@ import java.util.Observer;
 import java.util.Observable;
 import java.util.Locale;
 
-import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.widgets.Table;
@@ -12,14 +11,8 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Event;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.*;
-import org.eclipse.core.runtime.IConfigurationElement;
 import java.text.Collator;
-import org.eclipse.jface.window.Window;
-import org.eclipse.jface.window.ApplicationWindow;
 
 import java.util.HashSet;
 import java.util.Iterator;

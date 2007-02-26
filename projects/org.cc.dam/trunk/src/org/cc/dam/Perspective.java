@@ -23,7 +23,7 @@ public class Perspective implements IPerspectiveFactory {
 
 	// add the Database view!
 	layout.addView(DatabaseView.ID,
-            layout.RIGHT, (float) .5,IPageLayout.ID_EDITOR_AREA);
+            IPageLayout.RIGHT, (float) .5,IPageLayout.ID_EDITOR_AREA);
 	
 	}
 	String getLeftFolderID(){return leftFolderID;}

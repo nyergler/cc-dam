@@ -161,7 +161,7 @@ public class DetailWin extends ApplicationWindow implements SelectionListener, F
 		  // current metdata needs to be saved to the database
 		  if(e.getSource().equals(save)){
 			  this.detailTable.setSelection(0);
-			  HashMap hm = new HashMap();
+			  HashMap<String, String> hm = new HashMap<String, String>();
 			  for (int i = 0; i < this.detailTable.getItemCount(); i += 1) {
 				  hm.put(this.detailTable.getItem(i).getText(0), this.detailTable.getItem(i).getText(1));
 			  }

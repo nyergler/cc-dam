@@ -129,7 +129,7 @@ public class Database extends Observable {
     
     public void doQuery(HashMap attrib) {
         HashSet files  = this.findFilesWithAttributes(attrib);
-        HashSet result = new HashSet();
+        HashSet<String[]> result = new HashSet<String[]>();
         Iterator it = files.iterator();
         while (it.hasNext()) {
             String[] metadata = {"dc:title", "dc:creator"};
@@ -168,8 +168,8 @@ public class Database extends Observable {
             ps.setString(1, key);
             ps.setString(2, value);
             ResultSet rs   = ps.executeQuery();
-            HashSet files  = new HashSet();
-            HashSet result = new HashSet();
+            HashSet<String> files  = new HashSet<String>();
+            HashSet<String> result = new HashSet<String>();
             while (rs.next())
                 files.add(rs.getString("subject"));
             
@@ -209,7 +209,7 @@ public class Database extends Observable {
      */
     
     public HashMap getMetadataForFile(String filename, String[] attrib) {
-        HashMap result = new HashMap();
+        HashMap<String, String> result = new HashMap<String, String>();
         try {
             if (attrib != null) {
                 PreparedStatement statement =
@@ -324,7 +324,7 @@ public class Database extends Observable {
      */
     
     public HashSet getAllFileNames() {
-        HashSet result = new HashSet();
+        HashSet<String> result = new HashSet<String>();
         try {
             Statement statement = this.connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT subject FROM metadata");
@@ -354,7 +354,7 @@ public class Database extends Observable {
 
     public void exposeAll() {
         HashSet files  = this.getAllFileNames();
-        HashSet result = new HashSet();
+        HashSet<String[]> result = new HashSet<String[]>();
         Iterator it = files.iterator();
         while (it.hasNext()) {
             String[] metadata = {"dc:title", "dc:creator"};
@@ -449,19 +449,6 @@ public class Database extends Observable {
                 exception.printStackTrace();
             }
         }
-    }
-    
-    private String escapeSQL(String incoming) {
-    	String s = "";
-    	for (int i = 0; i < incoming.length(); i += 1) {
-    		if (incoming.charAt(i) == '\'')
-                s += "\\\'";
-            else if (incoming.charAt(i) == '\\')
-    			s += "\\\\";
-            else
-                s += incoming.charAt(i);
-    	}
-    	return s;
     }
     
     /**

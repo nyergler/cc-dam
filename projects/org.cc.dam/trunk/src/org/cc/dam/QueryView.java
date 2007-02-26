@@ -118,7 +118,7 @@ public class QueryView extends ViewPart {
 			
 			if (e.getSource() == addBtn){
 				
-				HashMap query = new HashMap();
+				HashMap<String, String> query = new HashMap<String, String>();
 				// Make TableItem from data
 				String[] data = {tags[key.getSelectionIndex()],value.getText()};
 				TableItem a = new TableItem(queryTable,SWT.NONE);
