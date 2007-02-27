@@ -16,6 +16,8 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.Combo;
 import java.util.*;
+import java.io.*;
+
 
 public class QueryView extends ViewPart {
 
@@ -26,6 +28,8 @@ public class QueryView extends ViewPart {
 	private Text value;
 	private Button addBtn;
 	private Button clearBtn;
+	private Button saveBtn;
+	private Button loadBtn;
 	
 	
 
@@ -81,15 +85,15 @@ public class QueryView extends ViewPart {
 		a.setLayoutData(gd);
 		
 		// not used yet
-//		Composite logic = new Composite(a,SWT.None);
-//		logic.setLayout(new GridLayout(2,false));
-//		Button andBtn = new Button(logic, SWT.RADIO);
-//		andBtn.setText("AND");
-//		Button orBtn = new Button(logic, SWT.RADIO);
-//		orBtn.setText("OR");
+// Composite logic = new Composite(a,SWT.None);
+// logic.setLayout(new GridLayout(2,false));
+// Button andBtn = new Button(logic, SWT.RADIO);
+// andBtn.setText("AND");
+// Button orBtn = new Button(logic, SWT.RADIO);
+// orBtn.setText("OR");
 //		
-//		Label blank = new Label(a,SWT.None);
-//		blank.setText("");
+// Label blank = new Label(a,SWT.None);
+// blank.setText("");
 		
 		// Key combo box
 		key = new Combo(a, SWT.BORDER);
@@ -105,6 +109,15 @@ public class QueryView extends ViewPart {
 		clearBtn = new Button(a, SWT.None);
 		clearBtn.setText("Clear Constraints");
 		clearBtn.addSelectionListener(qc);
+		
+		saveBtn = new Button(a,SWT.None);
+		saveBtn.setText("save");
+		saveBtn.addSelectionListener(qc);
+		
+		loadBtn = new Button(a,SWT.None);
+		loadBtn.setText("load");
+		loadBtn.addSelectionListener(qc);
+		
 	
 	}
 
@@ -123,6 +136,9 @@ public class QueryView extends ViewPart {
 				String[] data = {tags[key.getSelectionIndex()],value.getText()};
 				TableItem a = new TableItem(queryTable,SWT.NONE);
 				a.setText(data);
+				 for (int i = 0; i < queryTable.getColumnCount(); i += 1) { 
+				     queryTable.getColumn(i).pack(); 
+				     }
 				// Reset text
 				value.setText("");
 				
@@ -140,9 +156,59 @@ public class QueryView extends ViewPart {
 				queryTable.removeAll();
 				Controller.refreshDatabaseView();
 			}
-	
+			if(e.getSource() == saveBtn){
+				
+				Vector vec = new Vector();
+				TableItem[] items = queryTable.getItems();
 			
-			
+				for(int i = 0; i < items.length; i++){
+					String key = items[i].getText(0);
+					String data = items[i].getText(1);
+					vec.add(new Constraint(key,data));
+				}
+				try{
+					FileOutputStream fos = new FileOutputStream(new File("query.ser"));
+					ObjectOutputStream obj = new ObjectOutputStream(fos);
+					obj.writeObject(vec);
+					obj.flush();
+					obj.close();
+					fos.close();
+				}
+				catch(IOException er){
+					System.err.println("Could not save query.");
+				}
+			}
+			if(e.getSource() == loadBtn){
+				queryTable.removeAll();
+				try{
+					FileInputStream in = new FileInputStream("query.ser");
+					ObjectInputStream obj = new ObjectInputStream(in);
+					Vector constraints = (Vector)obj.readObject();
+					Iterator it = constraints.iterator();
+					
+					while(it.hasNext()){
+						Constraint c = (Constraint)it.next();
+						TableItem ti = new TableItem(queryTable,SWT.None);
+						ti.setText(0, c.getKey());
+						ti.setText(1, c.getData());
+					}
+					
+					// do the query
+					TableItem[] items = queryTable.getItems();
+					HashMap query = new HashMap();
+					for(int i = 0; i < items.length; i++){
+						query.put(items[i].getText(0), items[i].getText(1));
+					}
+					Controller.doQuery(query);
+					
+					
+				}
+				catch(Exception er){
+					System.err.println("Failed to load query.");
+				}
+					
+				
+			}
 		}
 		public void widgetDefaultSelected(SelectionEvent e){
 			
