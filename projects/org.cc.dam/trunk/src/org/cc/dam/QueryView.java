@@ -5,8 +5,11 @@ import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.TableColumn;
@@ -22,7 +25,7 @@ import java.io.*;
 public class QueryView extends ViewPart {
 
 	public static final String ID = "org.cc.dam.QueryView";
-	private String[] tags = {"dc:author", "dc:title"};
+	private String[] tags = {"dc:title", "dc:creator"};
 	private Table queryTable;
 	private Combo key;
 	private Text value;
@@ -128,7 +131,7 @@ public class QueryView extends ViewPart {
 
 	private class QueryController implements SelectionListener {
 		public void widgetSelected(SelectionEvent e){
-			
+			Shell shell = ((Control)e.getSource()).getShell();
 			if (e.getSource() == addBtn){
 				
 				HashMap<String, String> query = new HashMap<String, String>();
@@ -158,6 +161,9 @@ public class QueryView extends ViewPart {
 			}
 			if(e.getSource() == saveBtn){
 				
+				FileDialog chooser = new FileDialog(shell, SWT.SAVE);
+				String path = chooser.open();
+				
 				Vector vec = new Vector();
 				TableItem[] items = queryTable.getItems();
 			
@@ -167,7 +173,7 @@ public class QueryView extends ViewPart {
 					vec.add(new Constraint(key,data));
 				}
 				try{
-					FileOutputStream fos = new FileOutputStream(new File("query.ser"));
+					FileOutputStream fos = new FileOutputStream(new File(path));
 					ObjectOutputStream obj = new ObjectOutputStream(fos);
 					obj.writeObject(vec);
 					obj.flush();
@@ -181,7 +187,9 @@ public class QueryView extends ViewPart {
 			if(e.getSource() == loadBtn){
 				queryTable.removeAll();
 				try{
-					FileInputStream in = new FileInputStream("query.ser");
+					FileDialog chooser = new FileDialog(shell, SWT.OPEN);
+					String path = chooser.open();
+					FileInputStream in = new FileInputStream(path);
 					ObjectInputStream obj = new ObjectInputStream(in);
 					Vector constraints = (Vector)obj.readObject();
 					Iterator it = constraints.iterator();
