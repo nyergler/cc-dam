@@ -21,20 +21,25 @@ import org.eclipse.swt.widgets.Combo;
 import java.util.*;
 import java.io.*;
 
-
 public class QueryView extends ViewPart {
 
 	public static final String ID = "org.cc.dam.QueryView";
-	private String[] tags = {"dc:title", "dc:creator"};
+
+	private String[] tags = { "dc:title", "dc:creator" };
+
 	private Table queryTable;
+
 	private Combo key;
+
 	private Text value;
+
 	private Button addBtn;
+
 	private Button clearBtn;
+
 	private Button saveBtn;
+
 	private Button loadBtn;
-	
-	
 
 	public QueryView() {
 		// TODO Auto-generated constructor stub
@@ -45,30 +50,32 @@ public class QueryView extends ViewPart {
 	 * widgets into the view.
 	 */
 	public void createPartControl(Composite parent) {
-		
+
 		// Controller for query actions
 		QueryController qc = new QueryController();
 		// gridata
 		GridData gd = new GridData();
-	    gd.horizontalAlignment = GridData.FILL;
-	    gd.grabExcessHorizontalSpace = true;
-	   
-		parent.setLayout(new GridLayout(1,false));
+		gd.horizontalAlignment = GridData.FILL;
+		gd.grabExcessHorizontalSpace = true;
+
+		parent.setLayout(new GridLayout(1, false));
 
 		// Window information Label
 		Label queryLabel = new Label(parent, SWT.NONE);
 		queryLabel.setText("Use the options below to search the database.");
-		
+
 		// Query Builder
 		Group queryBuilder = new Group(parent, SWT.NONE);
 		queryBuilder.setText("Query Builder");
-		queryBuilder.setLayout(new GridLayout(1,true));
-		queryBuilder.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL | GridData.FILL_VERTICAL));
+		queryBuilder.setLayout(new GridLayout(1, true));
+		queryBuilder.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.GRAB_HORIZONTAL | GridData.FILL_VERTICAL));
 		// Make the table
 		queryTable = new Table(queryBuilder, SWT.NONE);
 		queryTable.setHeaderVisible(true);
-		queryTable.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL | GridData.GRAB_HORIZONTAL | GridData.FILL_VERTICAL));
-		
+		queryTable.setLayoutData(new GridData(GridData.HORIZONTAL_ALIGN_FILL
+				| GridData.GRAB_HORIZONTAL | GridData.FILL_VERTICAL));
+
 		// Key
 		TableColumn keyCol = new TableColumn(queryTable, SWT.LEFT);
 		keyCol.setResizable(true);
@@ -81,47 +88,35 @@ public class QueryView extends ViewPart {
 		keyCol.pack();
 		valueCol.pack();
 		queryTable.pack();
-		
+
 		// Controls
 		Composite a = new Composite(queryBuilder, SWT.NONE);
 		a.setLayout(new GridLayout(2, false));
 		a.setLayoutData(gd);
-		
-		// not used yet
-// Composite logic = new Composite(a,SWT.None);
-// logic.setLayout(new GridLayout(2,false));
-// Button andBtn = new Button(logic, SWT.RADIO);
-// andBtn.setText("AND");
-// Button orBtn = new Button(logic, SWT.RADIO);
-// orBtn.setText("OR");
-//		
-// Label blank = new Label(a,SWT.None);
-// blank.setText("");
-		
+
 		// Key combo box
 		key = new Combo(a, SWT.BORDER);
-		key.setItems(tags); 
+		key.setItems(tags);
 		// Value text box
 		value = new Text(a, SWT.BORDER);
 		value.setLayoutData(gd);
-		
+
 		addBtn = new Button(a, SWT.None);
 		addBtn.setText("Add Constraint");
 		addBtn.addSelectionListener(qc);
-	
+
 		clearBtn = new Button(a, SWT.None);
 		clearBtn.setText("Clear Constraints");
 		clearBtn.addSelectionListener(qc);
-		
-		saveBtn = new Button(a,SWT.None);
+
+		saveBtn = new Button(a, SWT.None);
 		saveBtn.setText("save");
 		saveBtn.addSelectionListener(qc);
-		
-		loadBtn = new Button(a,SWT.None);
+
+		loadBtn = new Button(a, SWT.None);
 		loadBtn.setText("load");
 		loadBtn.addSelectionListener(qc);
-		
-	
+
 	}
 
 	public void setFocus() {
@@ -130,96 +125,98 @@ public class QueryView extends ViewPart {
 	}
 
 	private class QueryController implements SelectionListener {
-		public void widgetSelected(SelectionEvent e){
-			Shell shell = ((Control)e.getSource()).getShell();
-			if (e.getSource() == addBtn){
-				
+		public void widgetSelected(SelectionEvent e) {
+			Shell shell = ((Control) e.getSource()).getShell();
+			final String delim = "@";
+
+			if (e.getSource() == addBtn) {
+
 				HashMap<String, String> query = new HashMap<String, String>();
 				// Make TableItem from data
-				String[] data = {tags[key.getSelectionIndex()],value.getText()};
-				TableItem a = new TableItem(queryTable,SWT.NONE);
+				String[] data = { tags[key.getSelectionIndex()],
+						value.getText() };
+				TableItem a = new TableItem(queryTable, SWT.NONE);
 				a.setText(data);
-				 for (int i = 0; i < queryTable.getColumnCount(); i += 1) { 
-				     queryTable.getColumn(i).pack(); 
-				     }
+				for (int i = 0; i < queryTable.getColumnCount(); i += 1) {
+					queryTable.getColumn(i).pack();
+				}
 				// Reset text
 				value.setText("");
-				
+
 				// pull all constraints out of table
 				TableItem[] items = queryTable.getItems();
 				// put constraits into HashMap
-				for(int i = 0; i < items.length; i++){
+				for (int i = 0; i < items.length; i++) {
 					query.put(items[i].getText(0), items[i].getText(1));
 				}
 				// query the database.
 				Controller.doQuery(query);
 			}
-			
-			if (e.getSource() == clearBtn){
+
+			if (e.getSource() == clearBtn) {
 				queryTable.removeAll();
 				Controller.refreshDatabaseView();
 			}
-			if(e.getSource() == saveBtn){
-				
+			if (e.getSource() == saveBtn) {
+
 				FileDialog chooser = new FileDialog(shell, SWT.SAVE);
 				String path = chooser.open();
-				
-				Vector vec = new Vector();
-				TableItem[] items = queryTable.getItems();
-			
-				for(int i = 0; i < items.length; i++){
-					String key = items[i].getText(0);
-					String data = items[i].getText(1);
-					vec.add(new Constraint(key,data));
+				try {
+
+					PrintWriter outFile = new PrintWriter(new FileWriter(path));
+					TableItem[] items = queryTable.getItems();
+
+					for (int i = 0; i < items.length; i++) {
+						String key = items[i].getText(0);
+						String data = items[i].getText(1);
+						outFile.println(key + delim + data);
+
+					}
+					outFile.flush();
+					outFile.close();
+
+				} catch (IOException ex) {
+					System.err.println("Error saving query.");
 				}
-				try{
-					FileOutputStream fos = new FileOutputStream(new File(path));
-					ObjectOutputStream obj = new ObjectOutputStream(fos);
-					obj.writeObject(vec);
-					obj.flush();
-					obj.close();
-					fos.close();
-				}
-				catch(IOException er){
-					System.err.println("Could not save query.");
-				}
+
 			}
-			if(e.getSource() == loadBtn){
+			if (e.getSource() == loadBtn) {
 				queryTable.removeAll();
-				try{
+				try {
 					FileDialog chooser = new FileDialog(shell, SWT.OPEN);
 					String path = chooser.open();
-					FileInputStream in = new FileInputStream(path);
-					ObjectInputStream obj = new ObjectInputStream(in);
-					Vector constraints = (Vector)obj.readObject();
-					Iterator it = constraints.iterator();
-					
-					while(it.hasNext()){
-						Constraint c = (Constraint)it.next();
-						TableItem ti = new TableItem(queryTable,SWT.None);
-						ti.setText(0, c.getKey());
-						ti.setText(1, c.getData());
+					BufferedReader inFile = new BufferedReader(new FileReader(
+							path));
+					String line;
+					while ((line = inFile.readLine()) != null) {
+						StringTokenizer tok = new StringTokenizer(line, delim);
+						if (tok.countTokens() == 2) {
+							TableItem ti = new TableItem(queryTable, SWT.None);
+							ti.setText(0, tok.nextToken());
+							ti.setText(1, tok.nextToken());
+						} else {
+							System.err.println("Invalid query file.");
+							break;
+						}
 					}
-					
+
 					// do the query
 					TableItem[] items = queryTable.getItems();
 					HashMap query = new HashMap();
-					for(int i = 0; i < items.length; i++){
+					for (int i = 0; i < items.length; i++) {
 						query.put(items[i].getText(0), items[i].getText(1));
 					}
 					Controller.doQuery(query);
-					
-					
-				}
-				catch(Exception er){
+
+				} catch (Exception er) {
 					System.err.println("Failed to load query.");
 				}
-					
-				
+
 			}
 		}
-		public void widgetDefaultSelected(SelectionEvent e){
-			
+
+		public void widgetDefaultSelected(SelectionEvent e) {
+
 		}
 	}
 
