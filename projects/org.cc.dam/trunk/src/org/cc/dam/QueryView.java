@@ -42,16 +42,16 @@ public class QueryView extends ViewPart {
 	private Button loadBtn;
 
 	private Button backBtn;
-	
+
 	private Button forwardBtn;
 
 	private LinkedList<ConstraintList> history;
-	
+
 	private int cursor;
 
 	public QueryView() {
 		history = new LinkedList<ConstraintList>();
-		
+
 	}
 
 	/***************************************************************************
@@ -85,12 +85,12 @@ public class QueryView extends ViewPart {
 		backBtn = new Button(historyGroup, SWT.None);
 		backBtn.setText("Back");
 		backBtn.addSelectionListener(qc);
-		
+
 		forwardBtn = new Button(historyGroup, SWT.None);
 		forwardBtn.setText("Forward");
 		forwardBtn.addSelectionListener(qc);
-		
-		if(history.isEmpty()){
+
+		if (history.isEmpty()) {
 			backBtn.setEnabled(false);
 			forwardBtn.setEnabled(false);
 		}
@@ -161,18 +161,16 @@ public class QueryView extends ViewPart {
 
 	private class QueryController implements SelectionListener {
 		private ConstraintList cl;
-		public QueryController(){
-			
+
+		public QueryController() {
+
 		}
-		
+
 		public void widgetSelected(SelectionEvent e) {
 			Shell shell = ((Control) e.getSource()).getShell();
-			
-			final String delim = "@";
 
 			if (e.getSource() == addBtn) {
 				cl = new ConstraintList();
-				HashMap<String, String> query = new HashMap<String, String>();
 				// Make TableItem from data
 				String[] data = { tags[key.getSelectionIndex()],
 						value.getText() };
@@ -181,87 +179,63 @@ public class QueryView extends ViewPart {
 				for (int i = 0; i < queryTable.getColumnCount(); i += 1) {
 					queryTable.getColumn(i).pack();
 				}
-			
+
 				// Reset text
 				value.setText("");
 
 				// pull all constraints out of table
 				TableItem[] items = queryTable.getItems();
-				// put constraits into HashMap
 				for (int i = 0; i < items.length; i++) {
 					String key = items[i].getText(0);
 					String value = items[i].getText(1);
-					
-					query.put(key,value);
-					// add the key-value pair to the constraints list
-					cl.addConstraint(key,value);
+					cl.addConstraint(key, value);
 				}
-				// query the database.
-				Controller.doQuery(query);
 				// add the constraints to the history.
 				history.addLast(cl);
 				// set the cursor to new search
-				cursor = history.size();
+				cursor = history.size()-1;
 				// we can now go back into history
 				backBtn.setEnabled(true);
-				
+				// query the database.
+				Controller.doQuery(cl.toHashMap());
 
 			}
 			if (e.getSource() == backBtn) {
 				// were going back
 				cursor--;
 				// update buttons
-				if(cursor == 0)
+				if (cursor == 0)
 					backBtn.setEnabled(false);
-				if( cursor < history.size())
+				if (cursor < history.size())
 					forwardBtn.setEnabled(true);
 				// load the history into the view
 				loadHistory(cursor);
-					
 
 			}
-			if(e.getSource() == forwardBtn){
+			if (e.getSource() == forwardBtn) {
 				// were going forward
 				cursor++;
 				// udpate buttons
-				if(cursor == (history.size()-1))
+				if (cursor == (history.size() - 1))
 					forwardBtn.setEnabled(false);
-				if(cursor > 0)
+				if (cursor > 0)
 					backBtn.setEnabled(true);
 				// load the history in the view.
 				loadHistory(cursor);
 			}
 
 			if (e.getSource() == clearBtn) {
-
-				queryTable.removeAll();
-				Controller.refreshDatabaseView();
+				clearQueryTable();
 			}
 			if (e.getSource() == saveBtn) {
 
 				FileDialog chooser = new FileDialog(shell, SWT.SAVE);
 				String path = chooser.open();
-				try {
-
-					PrintWriter outFile = new PrintWriter(new FileWriter(path));
-					TableItem[] items = queryTable.getItems();
-
-					for (int i = 0; i < items.length; i++) {
-						String key = items[i].getText(0);
-						String data = items[i].getText(1);
-						outFile.println(key + delim + data);
-
-					}
-					outFile.flush();
-					outFile.close();
-
-				} catch (IOException ex) {
-					System.err.println("Error saving query.");
-				}
-
+				history.get(cursor).saveToFile(path);
 			}
 			if (e.getSource() == loadBtn) {
-				queryTable.removeAll();
+				clearQueryTable();
+				cl = new ConstraintList();
 				try {
 					FileDialog chooser = new FileDialog(shell, SWT.OPEN);
 					String path = chooser.open();
@@ -269,24 +243,24 @@ public class QueryView extends ViewPart {
 							path));
 					String line;
 					while ((line = inFile.readLine()) != null) {
-						StringTokenizer tok = new StringTokenizer(line, delim);
+						StringTokenizer tok = new StringTokenizer(line, ConstraintList.DELIM);
 						if (tok.countTokens() == 2) {
-							TableItem ti = new TableItem(queryTable, SWT.None);
-							ti.setText(0, tok.nextToken());
-							ti.setText(1, tok.nextToken());
+							String key = tok.nextToken();
+							String value = tok.nextToken();
+							cl.addConstraint(key, value);
 						} else {
 							System.err.println("Invalid query file.");
 							break;
 						}
 					}
 
-					// do the query
-					TableItem[] items = queryTable.getItems();
-					HashMap <String,String>query = new HashMap<String,String>();
-					for (int i = 0; i < items.length; i++) {
-						query.put(items[i].getText(0), items[i].getText(1));
-					}
-					Controller.doQuery(query);
+					history.addLast(cl);
+					// set the cursor to new search
+					cursor = history.size()-1;
+					// we can now go back into history
+					backBtn.setEnabled(true);
+					
+					loadHistory(cursor);
 
 				} catch (Exception er) {
 					System.err.println("Failed to load query.");
@@ -298,23 +272,24 @@ public class QueryView extends ViewPart {
 		public void widgetDefaultSelected(SelectionEvent e) {
 
 		}
-		private void loadHistory(int time){
-			queryTable.removeAll();
-			Iterator it = history.get(time).getIterator();
+
+		private void loadHistory(int time) {
+			clearQueryTable();
+			Iterator it = history.get(time).toIterator();
 			while (it.hasNext()) {
-				
 				ConstraintWrapper a = (ConstraintWrapper) it.next();
 				TableItem ti = new TableItem(queryTable, SWT.NONE);
 				ti.setText(0, a.getKey());
 				ti.setText(1, a.getValue());
-				
-				/***
-				 * Things still to do:
-				 * -perform the actual query once history is loaded.
-				 * 
-				 */
+
+				Controller.doQuery(history.get(time).toHashMap());
+			}
+
 		}
-			
+
+		private void clearQueryTable() {
+			queryTable.removeAll();
+			Controller.refreshDatabaseView();
 		}
 	}
 
