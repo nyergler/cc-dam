@@ -41,8 +41,17 @@ public class QueryView extends ViewPart {
 
 	private Button loadBtn;
 
+	private Button backBtn;
+	
+	private Button forwardBtn;
+
+	private LinkedList<ConstraintList> history;
+	
+	private int cursor;
+
 	public QueryView() {
-		// TODO Auto-generated constructor stub
+		history = new LinkedList<ConstraintList>();
+		
 	}
 
 	/***************************************************************************
@@ -63,6 +72,41 @@ public class QueryView extends ViewPart {
 		// Window information Label
 		Label queryLabel = new Label(parent, SWT.NONE);
 		queryLabel.setText("Use the options below to search the database.");
+
+		Composite topControls = new Composite(parent, SWT.NONE);
+		topControls.setLayout(new GridLayout(2, false));
+		topControls.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+
+		Group historyGroup = new Group(topControls, SWT.NONE);
+		historyGroup.setLayout(new GridLayout(2, false));
+		historyGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		historyGroup.setText("History");
+
+		backBtn = new Button(historyGroup, SWT.None);
+		backBtn.setText("Back");
+		backBtn.addSelectionListener(qc);
+		
+		forwardBtn = new Button(historyGroup, SWT.None);
+		forwardBtn.setText("Forward");
+		forwardBtn.addSelectionListener(qc);
+		
+		if(history.isEmpty()){
+			backBtn.setEnabled(false);
+			forwardBtn.setEnabled(false);
+		}
+
+		Group slGroup = new Group(topControls, SWT.NONE);
+		slGroup.setLayout(new GridLayout(2, false));
+		slGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
+		slGroup.setText("Save / Load");
+
+		saveBtn = new Button(slGroup, SWT.None);
+		saveBtn.setText("save");
+		saveBtn.addSelectionListener(qc);
+
+		loadBtn = new Button(slGroup, SWT.None);
+		loadBtn.setText("load");
+		loadBtn.addSelectionListener(qc);
 
 		// Query Builder
 		Group queryBuilder = new Group(parent, SWT.NONE);
@@ -108,15 +152,6 @@ public class QueryView extends ViewPart {
 		clearBtn = new Button(a, SWT.None);
 		clearBtn.setText("Clear Constraints");
 		clearBtn.addSelectionListener(qc);
-
-		saveBtn = new Button(a, SWT.None);
-		saveBtn.setText("save");
-		saveBtn.addSelectionListener(qc);
-
-		loadBtn = new Button(a, SWT.None);
-		loadBtn.setText("load");
-		loadBtn.addSelectionListener(qc);
-
 	}
 
 	public void setFocus() {
@@ -125,12 +160,18 @@ public class QueryView extends ViewPart {
 	}
 
 	private class QueryController implements SelectionListener {
+		private ConstraintList cl;
+		public QueryController(){
+			
+		}
+		
 		public void widgetSelected(SelectionEvent e) {
 			Shell shell = ((Control) e.getSource()).getShell();
+			
 			final String delim = "@";
 
 			if (e.getSource() == addBtn) {
-
+				cl = new ConstraintList();
 				HashMap<String, String> query = new HashMap<String, String>();
 				// Make TableItem from data
 				String[] data = { tags[key.getSelectionIndex()],
@@ -140,6 +181,7 @@ public class QueryView extends ViewPart {
 				for (int i = 0; i < queryTable.getColumnCount(); i += 1) {
 					queryTable.getColumn(i).pack();
 				}
+			
 				// Reset text
 				value.setText("");
 
@@ -147,13 +189,51 @@ public class QueryView extends ViewPart {
 				TableItem[] items = queryTable.getItems();
 				// put constraits into HashMap
 				for (int i = 0; i < items.length; i++) {
-					query.put(items[i].getText(0), items[i].getText(1));
+					String key = items[i].getText(0);
+					String value = items[i].getText(1);
+					
+					query.put(key,value);
+					// add the key-value pair to the constraints list
+					cl.addConstraint(key,value);
 				}
 				// query the database.
 				Controller.doQuery(query);
+				// add the constraints to the history.
+				history.addLast(cl);
+				// set the cursor to new search
+				cursor = history.size();
+				// we can now go back into history
+				backBtn.setEnabled(true);
+				
+
+			}
+			if (e.getSource() == backBtn) {
+				// were going back
+				cursor--;
+				// update buttons
+				if(cursor == 0)
+					backBtn.setEnabled(false);
+				if( cursor < history.size())
+					forwardBtn.setEnabled(true);
+				// load the history into the view
+				loadHistory(cursor);
+					
+
+			}
+			if(e.getSource() == forwardBtn){
+				// were going forward
+				cursor++;
+				// udpate buttons
+				if(cursor == (history.size()-1))
+					forwardBtn.setEnabled(false);
+				if(cursor > 0)
+					backBtn.setEnabled(true);
+				// load the history in the view.
+				loadHistory(cursor);
 			}
 
 			if (e.getSource() == clearBtn) {
+
 				queryTable.removeAll();
 				Controller.refreshDatabaseView();
 			}
@@ -202,7 +282,7 @@ public class QueryView extends ViewPart {
 
 					// do the query
 					TableItem[] items = queryTable.getItems();
-					HashMap query = new HashMap();
+					HashMap <String,String>query = new HashMap<String,String>();
 					for (int i = 0; i < items.length; i++) {
 						query.put(items[i].getText(0), items[i].getText(1));
 					}
@@ -217,6 +297,24 @@ public class QueryView extends ViewPart {
 
 		public void widgetDefaultSelected(SelectionEvent e) {
 
+		}
+		private void loadHistory(int time){
+			queryTable.removeAll();
+			Iterator it = history.get(time).getIterator();
+			while (it.hasNext()) {
+				
+				ConstraintWrapper a = (ConstraintWrapper) it.next();
+				TableItem ti = new TableItem(queryTable, SWT.NONE);
+				ti.setText(0, a.getKey());
+				ti.setText(1, a.getValue());
+				
+				/***
+				 * Things still to do:
+				 * -perform the actual query once history is loaded.
+				 * 
+				 */
+		}
+			
 		}
 	}
 
