@@ -41,7 +41,6 @@ public class Controller {
         HashMap tags = null;
         Generic file = null;
         String filetypeClassName = "org.cc.dam.filetype." + extension.toUpperCase();
-        System.err.println(filetypeClassName);
         try {
         	Class aClass = Class.forName(filetypeClassName);
         	Class[] typeParams = { String.class };
