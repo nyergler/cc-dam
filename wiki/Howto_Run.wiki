@@ -1,0 +1,14 @@
+#summary Howto Run the Project
+#labels source,Featured
+
+= Check Out Source =
+
+First, check out the source code from the repository using Eclipse and Subclipse.  This you can do by following the instructions on the Subversion_Access page.
+
+= Refresh Required Plugins =
+
+Open both the org.cc.dam and org.cc.xmp projects in your Eclipse workspace.  In the org.cc.dam project, open the cc-dam.product file, and click on the "Configuration" tab.  In the Plugins section, click the "Remove All" button.  Now click the "Add..." button, and select org.cc.dam and org.cc.xmp from the list that appears.  Click OK.  Back on the Configuration tab, click the "Add Required Plug-ins" button. Save the cc-dam.product file.
+
+= Run The Program =
+
+On the cc-dam.product file's "Overview" tab, at the bottom on the left-hand side, click the "Launch the product" link.
