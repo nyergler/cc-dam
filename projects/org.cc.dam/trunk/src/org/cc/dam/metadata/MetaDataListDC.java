@@ -2,6 +2,10 @@ package org.cc.dam.metadata;
 
 public class MetaDataListDC extends MetaDataList
 {	
+	/**
+	 * Constructor.
+	 *
+	 */
 	public MetaDataListDC()
 	{
 		tags.add("dc:title");
@@ -20,13 +24,19 @@ public class MetaDataListDC extends MetaDataList
 		tags.add("dc:coverage");
 		tags.add("dc:rights");
 	}
-
+	
+	/**
+	 * See if a tag is contained in this metadata list.
+	 */
 	public boolean containsTag(String tag) {
 		for(int i = 0; i < tags.size(); i++)
 			if(tags.get(i).equals(tag)) return true;
 		return false;
 	}
 
+	/**
+	 * Validate a tag to a given format.
+	 */
 	public boolean isValid(String tag, String value) {
 		if(containsTag(tag)) return true;
 		else return false;

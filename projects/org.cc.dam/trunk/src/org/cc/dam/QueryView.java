@@ -24,8 +24,10 @@ import java.io.*;
 public class QueryView extends ViewPart {
 
 	public static final String ID = "org.cc.dam.QueryView";
+	
+	private MetaDataLoader mdLoader;
 
-	private String[] tags = { "dc:title", "dc:creator" };
+	private String[] tags;
 
 	private Table queryTable;
 
@@ -59,6 +61,9 @@ public class QueryView extends ViewPart {
 	 * widgets into the view.
 	 */
 	public void createPartControl(Composite parent) {
+		//Load the metadata
+		mdLoader = new MetaDataLoader();
+		tags = mdLoader.getAllTags();
 
 		// Controller for query actions
 		QueryController qc = new QueryController();

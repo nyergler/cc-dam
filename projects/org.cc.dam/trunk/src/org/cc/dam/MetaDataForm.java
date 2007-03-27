@@ -9,6 +9,10 @@ public class MetaDataForm
 	private Hashtable<String, MetaDataList> mdLookup;
 	private Vector<String> tags;
 	
+	/**
+	 * Constructor which creates a form based on the possible metadatas.
+	 * @param dataLists
+	 */
 	public MetaDataForm(MetaDataList dataLists[])
 	{
 		table    = new Hashtable<String, String>();
@@ -28,11 +32,20 @@ public class MetaDataForm
 		}
 	}
 	
+	/**
+	 * Get the tags in the MetaData list.
+	 * @return The tags.
+	 */
 	public String[] getTags()
 	{
 		return (String[]) tags.toArray();
 	}
 	
+	/**
+	 * Get the value of a given tag stored in the form.
+	 * @param tag
+	 * @return
+	 */
 	public String getValue(String tag)
 	{
 		//Check to see if the key is valid
@@ -45,6 +58,11 @@ public class MetaDataForm
 		return (String) table.get(tag);
 	}
 	
+	/**
+	 * Set the value of the tag
+	 * @param tag Tag Name
+	 * @param value Value
+	 */
 	public void setValue(String tag, String value)
 	{
 		//Check to see if the key is valid
