@@ -55,9 +55,8 @@ public class QueryView extends ViewPart {
 		history = new LinkedList<ConstraintList>();
 
 	}
-
-	/***************************************************************************
-	 * createPartControl creates a layout for the view, and creates / places the
+	/***
+	 * Creates a lyout for the view and places the
 	 * widgets into the view.
 	 */
 	public void createPartControl(Composite parent) {
@@ -67,17 +66,14 @@ public class QueryView extends ViewPart {
 
 		// Controller for query actions
 		QueryController qc = new QueryController();
-		// gridata
-		GridData gd = new GridData();
-		gd.horizontalAlignment = GridData.FILL;
-		gd.grabExcessHorizontalSpace = true;
-
+		
+		// set the parents layout
 		parent.setLayout(new GridLayout(1, false));
 
 		// Window information Label
 		Label queryLabel = new Label(parent, SWT.NONE);
 		queryLabel.setText("Use the options below to search the database.");
-
+		
 		Composite topControls = new Composite(parent, SWT.NONE);
 		topControls.setLayout(new GridLayout(2, false));
 		topControls.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -94,12 +90,13 @@ public class QueryView extends ViewPart {
 		forwardBtn = new Button(historyGroup, SWT.None);
 		forwardBtn.setText("Forward");
 		forwardBtn.addSelectionListener(qc);
-
+		
+		// we have no history, disable the buttons
 		if (history.isEmpty()) {
 			backBtn.setEnabled(false);
 			forwardBtn.setEnabled(false);
 		}
-
+		
 		Group slGroup = new Group(topControls, SWT.NONE);
 		slGroup.setLayout(new GridLayout(2, false));
 		slGroup.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -141,14 +138,14 @@ public class QueryView extends ViewPart {
 		// Controls
 		Composite a = new Composite(queryBuilder, SWT.NONE);
 		a.setLayout(new GridLayout(2, false));
-		a.setLayoutData(gd);
+		a.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		// Key combo box
 		key = new Combo(a, SWT.BORDER);
 		key.setItems(tags);
 		// Value text box
 		value = new Text(a, SWT.BORDER);
-		value.setLayoutData(gd);
+		value.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		addBtn = new Button(a, SWT.None);
 		addBtn.setText("Add Constraint");
@@ -163,17 +160,27 @@ public class QueryView extends ViewPart {
 		// TODO Auto-generated method stub
 
 	}
-
+	/***
+	 * Inner class to handle all query events
+	 */
 	private class QueryController implements SelectionListener {
+		
 		private ConstraintList cl;
-
+		/***
+		 * Constructor
+		 * does nothing.
+		 */
 		public QueryController() {
 
 		}
-
+		/***
+		 * Handles selection events from the query view
+		 */
 		public void widgetSelected(SelectionEvent e) {
 			Shell shell = ((Control) e.getSource()).getShell();
-
+			/***
+			 * Add a constraint to the queryTable, then perform query.
+			 */
 			if (e.getSource() == addBtn) {
 				cl = new ConstraintList();
 				// Make TableItem from data
@@ -205,6 +212,9 @@ public class QueryView extends ViewPart {
 				Controller.doQuery(cl.toHashMap());
 
 			}
+			/***
+			 * Load the previous query kept in memory
+			 */
 			if (e.getSource() == backBtn) {
 				// were going back
 				cursor--;
@@ -217,6 +227,9 @@ public class QueryView extends ViewPart {
 				loadHistory(cursor);
 
 			}
+			/***
+			 * Load the query that is forward from where we are at.
+			 */
 			if (e.getSource() == forwardBtn) {
 				// were going forward
 				cursor++;
@@ -228,16 +241,24 @@ public class QueryView extends ViewPart {
 				// load the history in the view.
 				loadHistory(cursor);
 			}
-
+			/***
+			 * Clear the query table and refresh the database
+			 */
 			if (e.getSource() == clearBtn) {
 				clearQueryTable();
 			}
+			/***
+			 * Save the current query to a file
+			 */
 			if (e.getSource() == saveBtn) {
 
 				FileDialog chooser = new FileDialog(shell, SWT.SAVE);
 				String path = chooser.open();
 				history.get(cursor).saveToFile(path);
 			}
+			/***
+			 * Load a query from a file
+			 */
 			if (e.getSource() == loadBtn) {
 				clearQueryTable();
 				cl = new ConstraintList();
@@ -277,21 +298,31 @@ public class QueryView extends ViewPart {
 		public void widgetDefaultSelected(SelectionEvent e) {
 
 		}
-
+		/***
+		 * Loads a query from the history linked list.
+		 * (private helper)
+		 * @param time The index of the query to load
+		 */
 		private void loadHistory(int time) {
+			//clear the table
 			clearQueryTable();
+			// pull out the query
 			Iterator it = history.get(time).toIterator();
+			// build the table
 			while (it.hasNext()) {
 				ConstraintWrapper a = (ConstraintWrapper) it.next();
 				TableItem ti = new TableItem(queryTable, SWT.NONE);
 				ti.setText(0, a.getKey());
 				ti.setText(1, a.getValue());
-
+				// perform the query
 				Controller.doQuery(history.get(time).toHashMap());
 			}
 
 		}
-
+		/***
+		 * Clears the queryTable and refrshes that database
+		 * (private helper)
+		 */
 		private void clearQueryTable() {
 			queryTable.removeAll();
 			Controller.refreshDatabaseView();
