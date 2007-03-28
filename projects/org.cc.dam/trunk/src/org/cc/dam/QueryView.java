@@ -216,10 +216,12 @@ public class QueryView extends ViewPart {
 			 * Load the previous query kept in memory
 			 */
 			if (e.getSource() == backBtn) {
+				
 				// were going back
 				cursor--;
+				
 				// update buttons
-				if (cursor == 0)
+				if (cursor <= -1)
 					backBtn.setEnabled(false);
 				if (cursor < history.size())
 					forwardBtn.setEnabled(true);
