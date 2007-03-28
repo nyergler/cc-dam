@@ -3,12 +3,22 @@
 
 <product name="Digital Asset Management" id="org.cc.dam.product" application="org.cc.dam.application" useFeatures="false">
 
+
    <configIni use="default"/>
 
    <launcherArgs>
    </launcherArgs>
 
    <windowImages/>
+
+
+   <launcher name="cc-dam">
+      <solaris/>
+      <win useIco="false">
+         <bmp/>
+      </win>
+   </launcher>
+
 
    <plugins>
       <plugin id="com.ibm.icu"/>
