@@ -1,5 +1,5 @@
 package org.cc.dam;
-
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.layout.GridData;
@@ -141,8 +141,9 @@ public class QueryView extends ViewPart {
 		a.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 
 		// Key combo box
-		key = new Combo(a, SWT.BORDER);
+		key = new Combo(a, SWT.BORDER | SWT.READ_ONLY);
 		key.setItems(tags);
+		key.setSelection(new Point(1,1));
 		// Value text box
 		value = new Text(a, SWT.BORDER);
 		value.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
@@ -171,11 +172,24 @@ public class QueryView extends ViewPart {
 		 * does nothing.
 		 */
 		public QueryController() {
+			
 
 		}
 		/***
 		 * Handles selection events from the query view
 		 */
+		private void monitorCtl(){
+			System.out.println(cursor);
+			if(cursor <= -1)
+				backBtn.setEnabled(false);
+			else
+				backBtn.setEnabled(true);
+			
+			if(cursor < history.size()-1)
+				forwardBtn.setEnabled(true);
+			else
+				forwardBtn.setEnabled(false);
+		}
 		public void widgetSelected(SelectionEvent e) {
 			Shell shell = ((Control) e.getSource()).getShell();
 			/***
@@ -219,13 +233,7 @@ public class QueryView extends ViewPart {
 				
 				// were going back
 				cursor--;
-				
-				// update buttons
-				if (cursor <= -1)
-					backBtn.setEnabled(false);
-				if (cursor < history.size())
-					forwardBtn.setEnabled(true);
-				// load the history into the view
+				monitorCtl();
 				loadHistory(cursor);
 
 			}
@@ -235,11 +243,7 @@ public class QueryView extends ViewPart {
 			if (e.getSource() == forwardBtn) {
 				// were going forward
 				cursor++;
-				// udpate buttons
-				if (cursor == (history.size() - 1))
-					forwardBtn.setEnabled(false);
-				if (cursor > 0)
-					backBtn.setEnabled(true);
+				monitorCtl();
 				// load the history in the view.
 				loadHistory(cursor);
 			}
