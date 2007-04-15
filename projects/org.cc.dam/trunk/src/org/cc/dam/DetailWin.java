@@ -2,9 +2,11 @@ package org.cc.dam;
 import org.eclipse.jface.window.ApplicationWindow;
 import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.widgets.Button;
@@ -25,6 +27,7 @@ import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.*;
 import org.eclipse.swt.graphics.Point;
 
+
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -36,16 +39,18 @@ public class DetailWin extends ApplicationWindow implements SelectionListener, F
 	private  TableEditor editor;
 	private Table detailTable;
 	private Text text;
-	private Text type;
+	private Combo type;
 	private Text info;
 	private TableItem item;
 	private ToolItem close;
 	private ToolItem save;
 	private ToolItem remove;
+	private MetaDataLoader mdLoader;
+	private String[] tags;
 
 
-     public DetailWin(String filename) {
-         super(null);
+     public DetailWin(Shell shell,String filename) {
+         super(shell);
          
          this.filename = filename;
   
@@ -53,6 +58,8 @@ public class DetailWin extends ApplicationWindow implements SelectionListener, F
 
 	  protected Control createContents(Composite parent)
 	  {
+		  mdLoader = new MetaDataLoader();
+		  tags = mdLoader.getAllTags();
 		  getShell().setText("Asset Detail View");
 		  parent.setSize(500,325);
 		  
@@ -84,7 +91,7 @@ public class DetailWin extends ApplicationWindow implements SelectionListener, F
 	      // set the items text
 	      save.setText("Save");
 	      close.setText("Close");
-	      remove.setText("Remove PDF");
+	      remove.setText("Remove");
 	      
 	      // Adding the listeners
 	      save.addSelectionListener(this);
@@ -110,7 +117,7 @@ public class DetailWin extends ApplicationWindow implements SelectionListener, F
 		  detailTable.setHeaderVisible(true);
 		  
 		  TableColumn meta = new TableColumn(detailTable,SWT.LEFT);
-		  meta.setText("Metadata Key");
+		  meta.setText("Metadata Tag");
 		  meta.setResizable(true);
 		  
 		  TableColumn data = new TableColumn(detailTable,SWT.LEFT);
@@ -138,10 +145,12 @@ public class DetailWin extends ApplicationWindow implements SelectionListener, F
 	      addGroup.setLayout(wide5);
 	      addGroup.setLayoutData(addGridData);
 	      
-	      new Label(addGroup,SWT.NONE).setText("Metadata key:");	 
-	      type = new Text(addGroup, SWT.BORDER);
+	      new Label(addGroup,SWT.NONE).setText("Metadata tag:");	 
+	      type = new Combo(addGroup, SWT.BORDER);
 	      type.setLayoutData(addGridData);
-	     
+	      type.setItems(tags);
+	      type.select(0);
+	      
 	      new Label(addGroup,SWT.NONE).setText("Data:");
 	      info = new Text(addGroup, SWT.BORDER);
 	      info.setLayoutData(addGridData);
@@ -154,7 +163,8 @@ public class DetailWin extends ApplicationWindow implements SelectionListener, F
 	  
 	  public void widgetSelected(SelectionEvent e) {
 		  if(e.getSource().equals(addBtn)){
-			  String[] tmp = {type.getText(),info.getText()};
+			  String the_tag = tags[type.getSelectionIndex()];
+			  String[] tmp = {the_tag,info.getText()};
 			  TableItem row = new TableItem(detailTable,0);
 			  row.setText(tmp);
 		  }

@@ -143,7 +143,7 @@ public class QueryView extends ViewPart {
 		// Key combo box
 		key = new Combo(a, SWT.BORDER | SWT.READ_ONLY);
 		key.setItems(tags);
-		key.setSelection(new Point(1,1));
+		key.select(0);
 		// Value text box
 		value = new Text(a, SWT.BORDER);
 		value.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));

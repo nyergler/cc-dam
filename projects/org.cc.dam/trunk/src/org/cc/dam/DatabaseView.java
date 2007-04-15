@@ -36,10 +36,11 @@ private Table table;
         	public void handleEvent(Event t){
         		
         		// create the detail view window
-        		DetailWin wwin = new DetailWin((String)table.getSelection()[0].getData());
+        		DetailWin wwin = new DetailWin(table.getShell(),(String)table.getSelection()[0].getData());
         		// pop up the window
+        		wwin.setBlockOnOpen(true);
         		wwin.open();
-        		
+        		System.out.println("d");
         	}
         });
 
