@@ -2,11 +2,14 @@ package org.cc.dam;
 
 //Needed Packages
 import java.util.Vector;
+import java.util.LinkedList;
 import org.cc.dam.metadata.*;
 
 public class MetaDataLoader
 {
 	Vector<MetaDataList> mdList = new Vector<MetaDataList>();
+	String allTags[];
+	LinkedList allTagMetaDatas[];
 	
 	/**
 	 * Constructor.

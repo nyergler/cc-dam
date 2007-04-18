@@ -4,6 +4,8 @@ import java.util.Vector;
 //trying to change name
 public abstract class MetaDataList {
 	protected Vector<String> tags;
+	protected String namespace;
+	protected String hrNamespace;
 	
 	/**
 	 * Constructor.
@@ -40,4 +42,22 @@ public abstract class MetaDataList {
 	 * See if a tag is contained in this metadata list.
 	 */	
 	public abstract boolean containsTag(String tag);
+	
+	/**
+	 * Get the namespace of a metadata set.
+	 * @return Namespace
+	 */
+	public String getNamespace()
+	{
+		return namespace;
+	}
+	
+	/**
+	 * Get the human readable version of the namespace
+	 * @return human readable version of namespace
+	 */
+	public String toString()
+	{
+		return hrNamespace;
+	}
 }

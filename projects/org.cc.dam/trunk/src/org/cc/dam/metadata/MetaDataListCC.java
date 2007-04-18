@@ -8,7 +8,9 @@ public class MetaDataListCC extends MetaDataList
 	 */
 	public MetaDataListCC()
 	{
-		tags.add("cc:license");
+		namespace = "cc:";
+		hrNamespace = "Creative Commons";
+		tags.add("license");
 	}
 
 	/**
@@ -16,7 +18,8 @@ public class MetaDataListCC extends MetaDataList
 	 */
 	public boolean containsTag(String tag) {
 		for(int i = 0; i < tags.size(); i++)
-			if(tags.get(i).equals(tag)) return true;
+			if(tags.get(i).equals(tag) ||
+			   (namespace + tags.get(i)).equals(tag)) return true;
 		return false;
 	}
 
