@@ -32,6 +32,8 @@ public class QueryView extends ViewPart {
 	private Table queryTable;
 
 	private Combo key;
+	
+	private Combo namespace;
 
 	private Text value;
 
@@ -139,7 +141,13 @@ public class QueryView extends ViewPart {
 		Composite a = new Composite(queryBuilder, SWT.NONE);
 		a.setLayout(new GridLayout(2, false));
 		a.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
-
+		
+		namespace = new Combo(a, SWT.BORDER | SWT.READ_ONLY);
+		//namespace.setItems();
+		namespace.addSelectionListener(qc);
+		namespace.select(0);
+		new Label(a,SWT.NONE);
+		
 		// Key combo box
 		key = new Combo(a, SWT.BORDER | SWT.READ_ONLY);
 		key.setItems(tags);
@@ -195,6 +203,10 @@ public class QueryView extends ViewPart {
 			/***
 			 * Add a constraint to the queryTable, then perform query.
 			 */
+			if (e.getSource() == namespace){
+				
+				System.out.println("test");
+			}
 			if (e.getSource() == addBtn) {
 				cl = new ConstraintList();
 				// Make TableItem from data
