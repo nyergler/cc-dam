@@ -143,15 +143,12 @@ public class QueryView extends ViewPart {
 		a.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		namespace = new Combo(a, SWT.BORDER | SWT.READ_ONLY);
-		namespace.add("All", 0);
 		
-		ArrayList <String>al = new ArrayList<String>();
+		String al[] = new String[1 + mdLoader.getAllNameSpaces().size()];
+		al[0] = "<ALL>";
 		Vector vec = mdLoader.getAllNameSpaces();
-		Iterator it = vec.iterator();
-		while(it.hasNext()){
-			al.add(it.next().toString());
-		}
-		namespace.setItems((String[])al.toArray());
+		for(int i = 1; i < 1 + vec.size(); i++) al[i] = vec.get(i-1).toString();
+		namespace.setItems(al);
 		namespace.addSelectionListener(qc);
 		namespace.select(0);
 		new Label(a,SWT.NONE);
@@ -212,13 +209,18 @@ public class QueryView extends ViewPart {
 			 * Add a constraint to the queryTable, then perform query.
 			 */
 			if (e.getSource() == namespace){
-				
-				System.out.println("test");
+				if(namespace.getSelectionIndex() == 0)key.setItems(mdLoader.getAllTags());
+				else key.setItems(mdLoader.getAllNameSpaces().get(namespace.getSelectionIndex()-1).getTags());
+				key.select(0);
 			}
 			if (e.getSource() == addBtn) {
 				cl = new ConstraintList();
 				// Make TableItem from data
-				String[] data = { tags[key.getSelectionIndex()],
+				String loc;
+				if(namespace.getSelectionIndex() == 0) loc = mdLoader.getAllTags()[key.getSelectionIndex()];
+				else loc = mdLoader.getAllNameSpaces().get(namespace.getSelectionIndex() - 1).getNamespace() +
+						   mdLoader.getAllNameSpaces().get(namespace.getSelectionIndex() - 1).getTags()[key.getSelectionIndex()];
+				String[] data = { loc,
 						value.getText() };
 				TableItem a = new TableItem(queryTable, SWT.NONE);
 				a.setText(data);

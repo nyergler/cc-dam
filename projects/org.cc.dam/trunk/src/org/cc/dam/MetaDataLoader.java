@@ -41,7 +41,7 @@ public class MetaDataLoader
 			String tag[] = mdList.get(i).getTags();
 			for(int j = 0; j < tag.length; j++)
 			{
-				tags[counter] = tag[j];
+				tags[counter] = mdList.get(i).getNamespace() + tag[j];
 				counter++;
 			}
 		}
