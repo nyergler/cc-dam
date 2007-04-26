@@ -48,4 +48,9 @@ public class MetaDataLoader
 		
 		return tags;
 	}
+	
+	public Vector<MetaDataList> getAllNameSpaces()
+	{
+		return mdList;
+	}
 }
