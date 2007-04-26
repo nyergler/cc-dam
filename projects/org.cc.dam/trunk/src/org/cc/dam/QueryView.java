@@ -143,7 +143,15 @@ public class QueryView extends ViewPart {
 		a.setLayoutData(new GridData(GridData.FILL_HORIZONTAL));
 		
 		namespace = new Combo(a, SWT.BORDER | SWT.READ_ONLY);
-		//namespace.setItems();
+		namespace.add("All", 0);
+		
+		ArrayList <String>al = new ArrayList<String>();
+		Vector vec = mdLoader.getAllNameSpaces();
+		Iterator it = vec.iterator();
+		while(it.hasNext()){
+			al.add(it.next().toString());
+		}
+		namespace.setItems((String[])al.toArray());
 		namespace.addSelectionListener(qc);
 		namespace.select(0);
 		new Label(a,SWT.NONE);
