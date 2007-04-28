@@ -29,7 +29,7 @@ public class PDF extends Generic {
 			for (int i = 0; i < PDF.SUPPORTED_METADATA.length; i += 1) {
 				String[] tags = PDF.SUPPORTED_METADATA[i].getTags();
 				for (int j = 0; j < tags.length; j += 1) {
-					supportedTags[index++] = tags[j]; 
+					supportedTags[index++] = SUPPORTED_METADATA[i].getNamespace() + tags[j]; 
 				}
 			}
 			XMLParser xmlp = new XMLParser(new PDFExtractor(this.filename), supportedTags);
