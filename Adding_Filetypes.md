@@ -1,0 +1,11 @@
+# Adding Filetypes #
+
+One of the goals of this project is to be highly extensible.  So, we give you the capability to add your own filetypes through a simple interface that relies on convention rather than configuration to get the job done.  Here's how.
+
+## Requirements ##
+
+**Place your class in the org.cc.dam.filetype package.** It must be named according to the extension of the file it should handle (and in upper-case).  Thus, a plugin to handle OpenDocument Text would be named org.cc.dam.filetype.ODT.
+**Your class should extend org.cc.dam.filetype.Generic.** It must declare a static array of MetaDataList called SUPPORTED\_METADATA.  Members of this array should be new instances of whatever metadata tags (see package org.cc.dam.metadata) you want your filetype to support.
+**The constructor must accept a String which is the filename from which to extract metadata.** The class must have at least one public function called getMetadata which returns a HashMap associating Strings (metadata keys) to Strings (metadata values).  You can do anything you want inside this method, as long as it results in a HashMap<String, String>.
+
+Please see the MP3 and PDF classes already in the system for examples.

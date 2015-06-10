@@ -1,0 +1,1 @@
+The [Creative Commons](http://creativecommons.org) Digital Asset Management project is working to build a digital asset management system with explicit support for Creative Commons licensing.  This project houses the application and libraries which have grown out of this project.
